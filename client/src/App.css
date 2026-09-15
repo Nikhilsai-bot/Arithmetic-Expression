@@ -146,6 +146,92 @@
   line-height: 1.6;
 }
 
+/* ---------- Scientific calculator (round keypad) ---------- */
+
+.sci-calc {
+  background: var(--page);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 20px;
+  max-width: 440px;
+}
+
+.sci-keypad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.rkey {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--rule);
+  background: #e9edf0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rkey:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.rkey:active {
+  transform: scale(0.95);
+}
+
+.rkey--fn {
+  color: var(--brass);
+  font-size: 13px;
+}
+
+.rkey--op {
+  background: #dfe5e9;
+  font-size: 17px;
+}
+
+.rkey--strong {
+  background: #d8dde1;
+  font-family: var(--serif);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rkey--mode {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.rkey--mode-active {
+  color: var(--brass);
+  border-color: var(--brass);
+  background: var(--brass-soft);
+  font-weight: 600;
+}
+
+.rkey--eq {
+  background: var(--brass);
+  border-color: var(--brass);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.rkey--eq:hover {
+  background: #bf7c38;
+}
+
+@media (max-width: 480px) {
+  .rkey {
+    font-size: 13px;
+  }
+}
+
 /* ---------- Calculator ---------- */
 
 .calc {

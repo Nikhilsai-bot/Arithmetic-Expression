@@ -92,6 +92,22 @@ export default function HowItWorks() {
           intermediate stack state.
         </p>
       </section>
+      <section className="section">
+        <h2 className="section__label">6. Scientific Functions</h2>
+        <p>
+          Trigonometric functions (<code>sin</code>, <code>cos</code>,{" "}
+          <code>tan</code> and their inverses), logarithms (<code>log</code>,{" "}
+          <code>ln</code>), <code>√</code>, and factorial (<code>!</code>)
+          are evaluated with the same stack machinery. Functions are pushed
+          onto the operator stack like a parenthesis and popped to the
+          output when their closing parenthesis is reached; factorial, being
+          postfix, is sent straight to the output since its operand already
+          precedes it. The constants <code>π</code> and <code>e</code> are
+          resolved to their numeric value during tokenization. An angle-mode
+          toggle (radians/degrees) controls how trigonometric input and
+          output are interpreted.
+        </p>
+      </section>
     </>
   );
 }

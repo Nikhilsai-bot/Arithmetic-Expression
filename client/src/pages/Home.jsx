@@ -1,29 +1,38 @@
 import { StackView, TraceStep } from "../components/Trace";
 import { useCalculator } from "../context/CalculatorContext";
 
-const KEYS = [
-  ["7", "8", "9", "/"],
-  ["4", "5", "6", "*"],
-  ["1", "2", "3", "-"],
-  ["0", ".", "^", "+"],
-  ["(", ")", "%", "="],
-];
-
 export default function Home() {
-  const { expression, outcome, error, tab, setTab, press, clear, backspace } = useCalculator();
+  const {
+    expression,
+    outcome,
+    error,
+    tab,
+    setTab,
+    angleMode,
+    setAngleMode,
+    inv,
+    setInv,
+    append,
+    pressFunction,
+    clear,
+    backspace,
+    calculate,
+  } = useCalculator();
 
   return (
     <>
       <p className="page__lede">
-        Enter an arithmetic expression below. It is tokenized, converted from
-        infix to postfix notation using the Shunting-Yard algorithm, then
-        evaluated on a postfix stack machine. Every push and pop is recorded
-        and shown in the trace beneath the calculator.
+        A full scientific calculator: trigonometric and logarithmic
+        functions, constants, and factorial are all evaluated the same way
+        as basic arithmetic — tokenized, converted to postfix via
+        Shunting-Yard, then run through a stack machine. Scroll down to see
+        the trace for whatever you calculate.
       </p>
 
       <section className="section">
-        <h2 className="section__label">Figure 1 — Calculator</h2>
-        <div className="calc">
+        <h2 className="section__label">Figure 1 — Scientific Calculator</h2>
+
+        <div className="sci-calc">
           <div className="display">
             <div className="display__expression">{expression || "0"}</div>
             <div className="display__result">
@@ -37,47 +46,72 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="keypad">
-            <button className="key key--fn" onClick={clear}>C</button>
-            <button className="key key--fn" onClick={backspace}>⌫</button>
-            <button className="key key--op" onClick={() => press("/")}>÷</button>
-            <button className="key key--op" onClick={() => press("*")}>×</button>
+          <div className="sci-keypad">
+            <button className="rkey rkey--fn" onClick={() => pressFunction("sin")}>sin</button>
+            <button className="rkey rkey--fn" onClick={() => pressFunction("cos")}>cos</button>
+            <button className="rkey rkey--fn" onClick={() => pressFunction("tan")}>tan</button>
+            <button
+              className={"rkey rkey--mode" + (angleMode === "rad" ? " rkey--mode-active" : "")}
+              onClick={() => setAngleMode("rad")}
+            >
+              rad
+            </button>
+            <button
+              className={"rkey rkey--mode" + (angleMode === "deg" ? " rkey--mode-active" : "")}
+              onClick={() => setAngleMode("deg")}
+            >
+              deg
+            </button>
 
-            {KEYS.slice(0, 3).map((row, ri) =>
-              row.map((k, ki) => (
-                <button
-                  key={`${ri}-${ki}`}
-                  className={"key" + (isNaN(k) && k !== "." ? " key--op" : "")}
-                  onClick={() => press(k)}
-                >
-                  {k === "/" ? "÷" : k === "*" ? "×" : k}
-                </button>
-              ))
-            )}
-            {KEYS[3].map((k, ki) => (
-              <button
-                key={`3-${ki}`}
-                className={"key" + (k === "=" ? " key--eq" : isNaN(k) && k !== "." ? " key--op" : "")}
-                onClick={() => press(k)}
-              >
-                {k}
-              </button>
-            ))}
-            {KEYS[4].map((k, ki) => (
-              <button
-                key={`4-${ki}`}
-                className={"key" + (k === "=" ? " key--eq" : isNaN(k) ? " key--op" : "")}
-                onClick={() => press(k)}
-              >
-                {k}
-              </button>
-            ))}
+            <button className="rkey rkey--fn" onClick={() => pressFunction("log")}>log</button>
+            <button className="rkey rkey--fn" onClick={() => pressFunction("ln")}>ln</button>
+            <button className="rkey" onClick={() => append("(")}>(</button>
+            <button className="rkey" onClick={() => append(")")}>)</button>
+            <button
+              className={"rkey rkey--mode" + (inv ? " rkey--mode-active" : "")}
+              onClick={() => setInv((v) => !v)}
+            >
+              inv
+            </button>
+
+            <button className="rkey rkey--fn" onClick={() => append("!")}>!</button>
+            <button className="rkey rkey--strong" onClick={clear}>AC</button>
+            <button className="rkey rkey--op" onClick={() => append("%")}>%</button>
+            <button className="rkey rkey--strong" onClick={backspace}>⌫</button>
+            <button className="rkey rkey--op" onClick={() => append("/")}>÷</button>
+
+            <button className="rkey rkey--fn" onClick={() => append("^")}>^</button>
+            <button className="rkey" onClick={() => append("7")}>7</button>
+            <button className="rkey" onClick={() => append("8")}>8</button>
+            <button className="rkey" onClick={() => append("9")}>9</button>
+            <button className="rkey rkey--op" onClick={() => append("*")}>×</button>
+
+            <button className="rkey rkey--fn" onClick={() => pressFunction("sqrt")}>√</button>
+            <button className="rkey" onClick={() => append("4")}>4</button>
+            <button className="rkey" onClick={() => append("5")}>5</button>
+            <button className="rkey" onClick={() => append("6")}>6</button>
+            <button className="rkey rkey--op" onClick={() => append("-")}>−</button>
+
+            <button className="rkey rkey--fn" onClick={() => append("pi")}>π</button>
+            <button className="rkey" onClick={() => append("1")}>1</button>
+            <button className="rkey" onClick={() => append("2")}>2</button>
+            <button className="rkey" onClick={() => append("3")}>3</button>
+            <button className="rkey rkey--op" onClick={() => append("+")}>+</button>
+
+            <button className="rkey rkey--fn" onClick={() => append("e")}>e</button>
+            <button className="rkey" onClick={() => append("00")}>00</button>
+            <button className="rkey" onClick={() => append("0")}>0</button>
+            <button className="rkey" onClick={() => append(".")}>.</button>
+            <button className="rkey rkey--eq" onClick={calculate}>=</button>
           </div>
 
           {outcome && (
             <div className="postfix-line">
               <span className="postfix-line__label">postfix form</span>
               <span className="postfix-line__value">{outcome.postfix.join(" ")}</span>
+              <span className="postfix-line__label" style={{ marginLeft: "auto" }}>
+                angle mode: {outcome.angleMode}
+              </span>
             </div>
           )}
         </div>
@@ -106,7 +140,8 @@ export default function Home() {
           {!outcome && (
             <div className="empty-note">
               Enter an expression above and press = to see the algorithm run
-              step by step.
+              step by step. Functions (sin, log, √, …) and factorial appear
+              in the trace just like any other operator.
             </div>
           )}
           {outcome &&

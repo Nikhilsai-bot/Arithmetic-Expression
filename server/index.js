@@ -13,13 +13,13 @@ app.get("/api/health", (req, res) => {
 });
 
 app.post("/api/calculate", async (req, res) => {
-  const { expression } = req.body;
+  const { expression, angleMode } = req.body;
   if (!expression || typeof expression !== "string") {
     return res.status(400).json({ error: "Provide an 'expression' string." });
   }
 
   try {
-    const outcome = calculate(expression);
+    const outcome = calculate(expression, angleMode === "deg" ? "deg" : "rad");
     await insertHistory(outcome.expression, outcome.postfix, outcome.result);
     res.json(outcome);
   } catch (err) {
