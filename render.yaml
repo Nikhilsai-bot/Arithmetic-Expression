@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: capstone-calculator-api
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
