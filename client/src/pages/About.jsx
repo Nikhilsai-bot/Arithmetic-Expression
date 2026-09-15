@@ -10,23 +10,23 @@ export default function About() {
           </div>
           <div>
             <dt>Course</dt>
-            <dd>[Your Course Code — Data Structures &amp; Algorithms]</dd>
+            <dd>23CSE203 — Data Structures &amp; Algorithms</dd>
           </div>
           <div>
             <dt>Student</dt>
-            <dd>[Your Name]</dd>
+            <dd>K. Nikhil, K. Jaagruthi</dd>
           </div>
           <div>
             <dt>Institution</dt>
-            <dd>[Your Institution]</dd>
+            <dd>Amrita School of Computing (Chennai)</dd>
           </div>
           <div>
             <dt>Term</dt>
-            <dd>[Semester / Year]</dd>
+            <dd>3rd Semester, 2nd Year</dd>
           </div>
           <div>
             <dt>Instructor</dt>
-            <dd>[Instructor Name]</dd>
+            <dd>Dr. J. Umamageswaran</dd>
           </div>
         </dl>
       </section>
@@ -67,7 +67,13 @@ export default function About() {
       <section className="section">
         <h2 className="section__label">Source</h2>
         <p>
-          Source code: <span className="mono">[Your GitHub repository URL]</span>
+          Source code:{" "}
+          <a
+            href="https://github.com/Nikhilsai-bot/Arithmetic-Expression"
+            className="mono"
+          >
+            github.com/Nikhilsai-bot/Arithmetic-Expression
+          </a>
         </p>
       </section>
     </>
