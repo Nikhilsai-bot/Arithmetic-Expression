@@ -43,10 +43,13 @@
   font-size: 13px;
   color: var(--ink);
   text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 4px;
 }
 
 .landing__navlinks a:hover {
-  color: var(--accent);
+  color: #fff;
+  background: #c0392b;
 }
 
 .landing__navcta {

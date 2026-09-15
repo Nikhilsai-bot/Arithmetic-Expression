@@ -40,16 +40,24 @@
   color: var(--muted);
   text-decoration: none;
   padding: 10px 14px;
+  border-radius: 4px;
   border-bottom: 2px solid transparent;
 }
 
 .site__navlink:hover {
-  color: var(--ink);
+  color: #fff;
+  background: #c0392b;
+  border-bottom-color: transparent;
 }
 
 .site__navlink--active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+.site__navlink--active:hover {
+  color: #fff;
+  background: #c0392b;
 }
 
 /* ---------- Page shell ---------- */
