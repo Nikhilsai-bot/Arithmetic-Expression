@@ -1,5 +1,6 @@
 import { StackView, TraceStep } from "../components/Trace";
 import { useCalculator } from "../context/CalculatorContext";
+import heroPattern from "../assets/hero-pattern.jpg";
 
 export default function Home() {
   const {
@@ -20,7 +21,15 @@ export default function Home() {
   } = useCalculator();
 
   return (
-    <>
+    <div
+      className="home-bg"
+      style={{
+        backgroundImage: `url(${heroPattern})`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "700px auto",
+        backgroundPosition: "top center",
+      }}
+    >
       <p className="page__lede">
         A full scientific calculator: trigonometric and logarithmic
         functions, constants, and factorial are all evaluated the same way
@@ -150,6 +159,6 @@ export default function Home() {
             )}
         </div>
       </section>
-    </>
+    </div>
   );
 }
