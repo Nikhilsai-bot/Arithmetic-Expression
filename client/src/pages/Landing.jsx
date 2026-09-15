@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import StackIllustration from "../components/StackIllustration";
+import AppMockup from "../components/AppMockup";
 import "./Landing.css";
 
 export default function Landing() {
@@ -10,11 +10,11 @@ export default function Landing() {
           <span className="landing__mark">§</span>
           Stack Evaluator
         </div>
-        <nav className="landing__navlinks">
+        <div className="landing__navlinks">
           <Link to="/how-it-works">How It Works</Link>
           <Link to="/history">History</Link>
           <Link to="/about">About</Link>
-        </nav>
+        </div>
         <Link to="/calculator" className="landing__navcta">
           Try the Calculator
         </Link>
@@ -22,31 +22,28 @@ export default function Landing() {
 
       <section className="landing__hero">
         <div className="landing__copy">
-          <p className="landing__eyebrow">DSA Capstone Project</p>
           <h1 className="landing__headline">
-            HOW AN
+            Welcome to
             <br />
-            EXPRESSION
-            <br />
-            GETS EVALUATED
+            Stack Evaluator
           </h1>
           <p className="landing__sub">
-            A working arithmetic calculator built to show exactly how a stack
-            evaluates expressions — from Dijkstra's Shunting-Yard algorithm
-            to postfix evaluation, one push and pop at a time.
+            See exactly how an arithmetic expression gets evaluated — from
+            Dijkstra's Shunting-Yard algorithm to postfix evaluation, one
+            stack push and pop at a time.
           </p>
           <div className="landing__actions">
             <Link to="/calculator" className="landing__cta">
-              Try the Calculator →
+              Try the Calculator
             </Link>
             <Link to="/how-it-works" className="landing__cta-secondary">
-              See how it works
+              How It Works
             </Link>
           </div>
         </div>
 
         <div className="landing__art">
-          <StackIllustration />
+          <AppMockup />
         </div>
       </section>
 
