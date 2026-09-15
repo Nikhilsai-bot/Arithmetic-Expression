@@ -55,10 +55,10 @@ export default function History() {
             <thead>
               <tr>
                 <th>#</th>
-                <th style="color: red;">Expression</th>
-                <th style="color: red;">Postfix Form</th>
-                <th style="color: red;">Result</th>
-                <th style="color: red;" >Timestamp</th>
+                <th >Expression</th>
+                <th>Postfix Form</th>
+                <th>Result</th>
+                <th>Timestamp</th>
               </tr>
             </thead>
             <tbody>
