@@ -24,7 +24,7 @@ export default function Layout({ children }) {
               end={item.end}
               className={({ isActive }) => "site__navlink" + (isActive ? " site__navlink--active" : "")}
             >
-              {item.label}
+              <span>{item.label}</span>
             </NavLink>
           ))}
         </nav>

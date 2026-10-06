@@ -48,8 +48,8 @@ export default function Home() {
         <section className="section">
           <h2 className="section__label">Suggestions — Based on Your History</h2>
           <div className="chip-row">
-            {quickPicks.map((e) => (
-              <button key={e} className="chip" onClick={() => loadExpression(e)}>
+            {quickPicks.map((e, i) => (
+              <button key={e} className="chip" style={{ "--i": i }} onClick={() => loadExpression(e)}>
                 {e}
               </button>
             ))}
@@ -65,9 +65,9 @@ export default function Home() {
             <div className="display__expression">{expression || "0"}</div>
             <div className="display__result">
               {error ? (
-                <span className="display__error">{error}</span>
+                <span key={error} className="display__error">{error}</span>
               ) : outcome ? (
-                <span>{outcome.result}</span>
+                <span key={String(outcome.result) + outcome.postfix.join(" ")} className="display__value">{outcome.result}</span>
               ) : (
                 <span className="display__placeholder">&nbsp;</span>
               )}
@@ -77,8 +77,8 @@ export default function Home() {
           {suggestedNext.length > 0 && (
             <div className="next-suggest">
               <span className="next-suggest__label">next:</span>
-              {suggestedNext.map(({ token }) => (
-                <button key={token} className="next-suggest__chip" onClick={() => append(token)}>
+              {suggestedNext.map(({ token }, i) => (
+                <button key={token} className="next-suggest__chip" style={{ "--i": i }} onClick={() => append(token)}>
                   {token}
                 </button>
               ))}
@@ -145,7 +145,7 @@ export default function Home() {
           </div>
 
           {outcome && (
-            <div className="postfix-line">
+            <div className="postfix-line" key={outcome.postfix.join(" ")}>
               <span className="postfix-line__label">postfix form</span>
               <span className="postfix-line__value">{outcome.postfix.join(" ")}</span>
               <span className="postfix-line__label" style={{ marginLeft: "auto" }}>
@@ -167,8 +167,8 @@ export default function Home() {
           </p>
           {analysis.functionUsage.length > 0 && (
             <div className="usage-bars">
-              {analysis.functionUsage.map(({ token, count }) => (
-                <div key={token} className="usage-bar">
+              {analysis.functionUsage.map(({ token, count }, i) => (
+                <div key={token} className="usage-bar" style={{ "--i": i }}>
                   <span className="usage-bar__label">{token}</span>
                   <div className="usage-bar__track">
                     <div
@@ -203,7 +203,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="trace__body">
+        <div className="trace__body" key={tab}>
           {!outcome && (
             <div className="empty-note">
               Enter an expression above and press = to see the algorithm run
@@ -213,7 +213,7 @@ export default function Home() {
           )}
           {outcome &&
             (tab === "postfix" ? outcome.trace.infixToPostfix : outcome.trace.evaluation).map(
-              (step, i) => <TraceStep key={i} step={step} phase={tab} index={i + 1} />
+              (step, i) => <TraceStep key={tab + i} step={step} phase={tab} index={i + 1} />
             )}
         </div>
       </section>

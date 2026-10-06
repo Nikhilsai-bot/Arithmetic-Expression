@@ -9,6 +9,7 @@ export function StackView({ label, items, highlightTop }) {
           <div
             key={i}
             className={"stack-tile" + (i === 0 && highlightTop ? " stack-tile--top" : "")}
+            style={{ "--i": i }}
           >
             {String(item)}
           </div>
@@ -21,7 +22,7 @@ export function StackView({ label, items, highlightTop }) {
 export function TraceStep({ step, phase, index }) {
   if (phase === "postfix") {
     return (
-      <div className="trace-step">
+      <div className="trace-step" style={{ "--i": Math.min(index, 12) }}>
         <div className="trace-step__head">
           <span className="trace-step__index">{index}</span>
           <span className="trace-step__action">{step.action}</span>
@@ -35,7 +36,7 @@ export function TraceStep({ step, phase, index }) {
     );
   }
   return (
-    <div className="trace-step">
+    <div className="trace-step" style={{ "--i": Math.min(index, 12) }}>
       <div className="trace-step__head">
         <span className="trace-step__index">{index}</span>
         <span className="trace-step__action">{step.action}</span>

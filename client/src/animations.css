@@ -1,0 +1,323 @@
+/* =====================================================================
+   Animations & transitions — every page
+   All motion is disabled under prefers-reduced-motion (bottom of file).
+   ===================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ---------- Keyframes ---------- */
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes pageOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-12px); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideRight {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes wordRise {
+  from { opacity: 0; transform: translateY(0.6em); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes mockupIn {
+  from { opacity: 0; transform: translateY(40px) rotate(1.5deg) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+}
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes keyPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); background: var(--accent-soft); border-color: var(--accent); }
+}
+@keyframes tilePush {
+  from { opacity: 0; transform: translateY(-12px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes resultPop {
+  0%   { opacity: 0; transform: scale(0.7) translateY(6px); }
+  60%  { opacity: 1; transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+@keyframes growX {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulseSoft {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+@keyframes ctaShine {
+  0%   { transform: translateX(-120%) skewX(-20deg); }
+  60%, 100% { transform: translateX(260%) skewX(-20deg); }
+}
+@keyframes underlineIn {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* ---------- Page transitions ---------- */
+
+.page-transition--enter { animation: pageIn 0.5s var(--ease-out) both; }
+.page-transition--exit  { animation: pageOut 0.22s ease-in both; pointer-events: none; }
+
+/* ---------- Scroll reveal (class added by PageTransition) ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* rows are table elements – keep transform subtle so layout never jumps */
+.data-table tbody tr.reveal { transform: translateX(-12px); }
+.data-table tbody tr.reveal.is-visible { transform: none; }
+
+/* ---------- Site chrome (inner pages) ---------- */
+
+.site__header { animation: fadeDown 0.6s var(--ease-out) both; }
+.site__mark { display: inline-block; animation: popIn 0.6s var(--ease-spring) 0.2s both; }
+.site__navlink { position: relative; transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease-out); }
+.site__navlink:hover { transform: translateY(-2px); }
+.site__navlink--active { animation: fadeIn 0.4s ease both; }
+.site__navlink--active::after {
+  content: "";
+  position: absolute;
+  left: 14px; right: 14px; bottom: -2px;
+  height: 2px;
+  background: var(--accent);
+  transform-origin: left;
+  animation: underlineIn 0.45s var(--ease-out) both;
+}
+.site__nav .site__navlink:nth-child(1) { animation-delay: 0.05s; }
+.site__nav .site__navlink:nth-child(2) { animation-delay: 0.10s; }
+.site__nav .site__navlink:nth-child(3) { animation-delay: 0.15s; }
+.site__nav .site__navlink:nth-child(4) { animation-delay: 0.20s; }
+.site__nav .site__navlink:nth-child(5) { animation-delay: 0.25s; }
+.site__footer { animation: fadeIn 0.8s ease 0.4s both; }
+
+/* ---------- Landing page ---------- */
+
+.landing__nav { animation: fadeDown 0.6s var(--ease-out) both; }
+.landing__mark { display: inline-block; animation: popIn 0.7s var(--ease-spring) 0.2s both; }
+.landing__navlinks a,
+.landing__navcta {
+  transition: color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease-out), box-shadow 0.2s ease;
+}
+.landing__navlinks a:hover,
+.landing__navcta:hover { transform: translateY(-2px); }
+
+.landing__word {
+  display: inline-block;
+  animation: wordRise 0.8s var(--ease-out) both;
+  animation-delay: calc(0.15s + var(--w, 0) * 0.12s);
+}
+.landing__sub     { animation: fadeUp 0.8s var(--ease-out) 0.7s both; }
+.landing__actions { animation: fadeUp 0.8s var(--ease-out) 0.9s both; }
+.landing__art     { animation: mockupIn 1s var(--ease-out) 0.5s both; }
+.landing__art .app-mockup { animation: floatY 6s ease-in-out 1.6s infinite; }
+
+.landing__cta,
+.landing__cta-secondary {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.25s var(--ease-out), box-shadow 0.25s ease;
+}
+.landing__cta:hover,
+.landing__cta-secondary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px -10px rgba(22, 32, 42, 0.45);
+}
+.landing__cta:active,
+.landing__cta-secondary:active { transform: translateY(0) scale(0.98); }
+.landing__cta::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  animation: ctaShine 4s ease-in-out 2s infinite;
+  pointer-events: none;
+}
+.landing__footer { animation: fadeIn 0.9s ease 1.1s both; }
+
+/* mockup internals */
+.app-mockup { transition: box-shadow 0.4s ease; }
+.app-mockup:hover { box-shadow: 0 28px 60px -20px rgba(22, 32, 42, 0.38); }
+.app-mockup__key { animation: popIn 0.4s var(--ease-spring) both; transition: transform 0.2s var(--ease-out), background-color 0.2s ease; }
+.app-mockup__key:hover { transform: translateY(-2px) scale(1.06); background: var(--accent-soft); }
+.app-mockup__grid .app-mockup__key:nth-child(5n+1) { animation-delay: 0.9s; }
+.app-mockup__grid .app-mockup__key:nth-child(5n+2) { animation-delay: 0.97s; }
+.app-mockup__grid .app-mockup__key:nth-child(5n+3) { animation-delay: 1.04s; }
+.app-mockup__grid .app-mockup__key:nth-child(5n+4) { animation-delay: 1.11s; }
+.app-mockup__grid .app-mockup__key:nth-child(5n)   { animation-delay: 1.18s; }
+.app-mockup__key--eq { animation: popIn 0.4s var(--ease-spring) 1.3s both, keyPulse 2.8s ease-in-out 2.6s infinite; }
+.app-mockup__result { animation: resultPop 0.7s var(--ease-spring) 1.4s both; }
+.app-mockup__expr   { animation: fadeIn 0.8s ease 1s both; }
+.app-mockup__tile   { animation: tilePush 0.5s var(--ease-spring) both; }
+.app-mockup__tile:nth-child(1) { animation-delay: 1.6s; }
+.app-mockup__tile:nth-child(2) { animation-delay: 1.8s; }
+.app-mockup__dot { animation: popIn 0.4s var(--ease-spring) both; }
+.app-mockup__dot:nth-child(1) { animation-delay: 0.7s; }
+.app-mockup__dot:nth-child(2) { animation-delay: 0.8s; }
+.app-mockup__dot:nth-child(3) { animation-delay: 0.9s; }
+
+/* ---------- Calculator page ---------- */
+
+.rkey {
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease,
+              transform 0.18s var(--ease-out), box-shadow 0.18s ease;
+}
+.rkey:hover { transform: translateY(-2px); box-shadow: 0 6px 12px -6px rgba(22, 32, 42, 0.35); }
+.rkey:active { transform: scale(0.92); box-shadow: none; transition-duration: 0.06s; }
+.rkey--eq:hover { box-shadow: 0 8px 16px -6px rgba(166, 106, 46, 0.6); }
+
+.sci-keypad .rkey { animation: popIn 0.45s var(--ease-spring) both; }
+.sci-keypad .rkey:nth-child(5n+1) { animation-delay: 0.10s; }
+.sci-keypad .rkey:nth-child(5n+2) { animation-delay: 0.16s; }
+.sci-keypad .rkey:nth-child(5n+3) { animation-delay: 0.22s; }
+.sci-keypad .rkey:nth-child(5n+4) { animation-delay: 0.28s; }
+.sci-keypad .rkey:nth-child(5n)   { animation-delay: 0.34s; }
+
+.sci-calc { animation: fadeUp 0.7s var(--ease-out) 0.1s both; transition: box-shadow 0.3s ease; }
+.sci-calc:hover { box-shadow: 0 18px 40px -22px rgba(22, 32, 42, 0.35); }
+
+.display__value { display: inline-block; animation: resultPop 0.5s var(--ease-spring) both; }
+.display__error { display: inline-block; animation: shake 0.45s ease both; }
+.display__expression { transition: color 0.2s ease; }
+
+.chip,
+.next-suggest__chip {
+  animation: popIn 0.4s var(--ease-spring) both;
+  animation-delay: calc(var(--i, 0) * 60ms);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s var(--ease-out);
+}
+.chip:hover,
+.next-suggest__chip:hover { transform: translateY(-2px); }
+.chip:active,
+.next-suggest__chip:active { transform: scale(0.95); }
+
+.postfix-line { animation: slideRight 0.45s var(--ease-out) both; }
+.postfix-line__value { animation: fadeIn 0.6s ease 0.2s both; }
+
+/* usage bars */
+.usage-bar { animation: slideRight 0.5s var(--ease-out) both; animation-delay: calc(var(--i, 0) * 80ms); }
+.usage-bar__fill {
+  transform-origin: left;
+  animation: growX 0.9s var(--ease-out) both;
+  animation-delay: calc(0.2s + var(--i, 0) * 80ms);
+}
+
+/* trace */
+.tab { position: relative; transition: color 0.2s ease, border-color 0.3s ease, transform 0.2s ease; }
+.tab:not(:disabled):hover { color: var(--ink); }
+.trace__body { animation: fadeIn 0.3s ease both; }
+.trace-step {
+  animation: fadeUp 0.5s var(--ease-out) both;
+  animation-delay: calc(var(--i, 1) * 55ms);
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 0.25s var(--ease-out);
+}
+.trace-step:hover {
+  border-color: var(--accent);
+  transform: translateX(4px);
+  box-shadow: -3px 0 0 0 var(--accent);
+}
+.stack-tile {
+  animation: tilePush 0.45s var(--ease-spring) both;
+  animation-delay: calc(var(--i, 0) * 40ms + 0.15s);
+}
+.stack-tile--top { animation-name: tilePush; }
+.empty-note { animation: fadeIn 0.8s ease both; }
+
+/* ---------- History page ---------- */
+
+.link-btn { transition: color 0.2s ease, letter-spacing 0.25s ease; }
+.link-btn:hover { letter-spacing: 0.04em; }
+.data-table tbody tr { transition: background-color 0.2s ease; }
+.data-table tbody tr:hover { background: var(--accent-soft); }
+.data-table tbody tr.reveal { transition-delay: calc(var(--i, 0) * 45ms); }
+
+.loading-note { display: flex; align-items: center; gap: 10px; animation: pulseSoft 1.4s ease-in-out infinite; }
+.spinner {
+  width: 16px; height: 16px;
+  border: 2px solid var(--rule-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+/* ---------- About page ---------- */
+
+.meta-list > div { transition: transform 0.25s var(--ease-out), background-color 0.25s ease; border-radius: 4px; }
+.meta-list > div:hover { transform: translateX(6px); }
+.section a { transition: color 0.2s ease, letter-spacing 0.2s ease; }
+.section a:hover { letter-spacing: 0.02em; }
+
+/* ---------- How It Works page ---------- */
+
+.rule-list li { transition: transform 0.25s var(--ease-out); }
+.rule-list li:hover { transform: translateX(4px); }
+.code-block { transition: box-shadow 0.3s ease, transform 0.3s var(--ease-out); }
+.code-block:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -16px rgba(22, 32, 42, 0.4); }
+.section__label { position: relative; display: inline-block; }
+.section__label::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -4px;
+  width: 100%; height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-out) 0.2s;
+}
+.section.is-visible .section__label::after,
+.section:not(.reveal) .section__label::after { transform: scaleX(1); }
+
+/* ---------- Reduced motion: switch everything off ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal { opacity: 1 !important; transform: none !important; }
+}

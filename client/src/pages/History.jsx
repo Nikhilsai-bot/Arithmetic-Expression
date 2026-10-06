@@ -41,7 +41,11 @@ export default function History() {
           </button>
         </div>
 
-        {loading && <div className="empty-note">Loading…</div>}
+        {loading && (
+          <div className="empty-note loading-note">
+            <span className="spinner" aria-hidden="true" /> Loading…
+          </div>
+        )}
 
         {!loading && history.length === 0 && (
           <div className="empty-note">
@@ -55,15 +59,15 @@ export default function History() {
             <thead>
               <tr>
                 <th>#</th>
-                <th >Expression</th>
+                <th>Expression</th>
                 <th>Postfix Form</th>
                 <th>Result</th>
                 <th>Timestamp</th>
               </tr>
             </thead>
             <tbody>
-              {history.map((h) => (
-                <tr key={h.id}>
+              {history.map((h, i) => (
+                <tr key={h.id} style={{ "--i": i }}>
                   <td>{h.id}</td>
                   <td className="mono">{h.expression}</td>
                   <td className="mono">{h.postfix.join(" ")}</td>

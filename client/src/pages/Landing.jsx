@@ -23,9 +23,11 @@ export default function Landing() {
       <section className="landing__hero">
         <div className="landing__copy">
           <h1 className="landing__headline">
-            Welcome to
+            <span className="landing__word" style={{ "--w": 0 }}>Welcome</span>{" "}
+            <span className="landing__word" style={{ "--w": 1 }}>to</span>
             <br />
-            Stack Evaluator
+            <span className="landing__word" style={{ "--w": 2 }}>Stack</span>{" "}
+            <span className="landing__word" style={{ "--w": 3 }}>Evaluator</span>
           </h1>
           <p className="landing__sub">
             See exactly how an arithmetic expression gets evaluated — from
