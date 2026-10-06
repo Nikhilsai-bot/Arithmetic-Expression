@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { calculate } = require("./calculator");
 const { initDb, insertHistory, getHistory, clearHistory, backend } = require("./db");
+const { computeAnalysis } = require("./analysis");
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,7 @@ app.post("/api/calculate", async (req, res) => {
 
   try {
     const outcome = calculate(expression, angleMode === "deg" ? "deg" : "rad");
-    await insertHistory(outcome.expression, outcome.postfix, outcome.result);
+    await insertHistory(outcome.expression, outcome.tokens, outcome.postfix, outcome.result);
     res.json(outcome);
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -38,6 +39,15 @@ app.get("/api/history", async (req, res) => {
 app.delete("/api/history", async (req, res) => {
   await clearHistory();
   res.json({ status: "cleared" });
+});
+
+app.get("/api/analysis", async (req, res) => {
+  try {
+    const rows = await getHistory(200); // analyze a larger recent window
+    res.json(computeAnalysis(rows));
+  } catch (err) {
+    res.status(500).json({ error: "Could not compute analysis: " + err.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

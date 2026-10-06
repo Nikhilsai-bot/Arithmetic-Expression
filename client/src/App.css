@@ -154,6 +154,107 @@
   line-height: 1.6;
 }
 
+/* ---------- Suggestions ---------- */
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--page);
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.next-suggest {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.next-suggest__label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.next-suggest__chip {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--brass-soft);
+  border: 1px solid var(--brass);
+  color: var(--brass);
+  padding: 4px 12px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.next-suggest__chip:hover {
+  background: var(--brass);
+  color: #fff;
+}
+
+.insights__summary {
+  font-size: 14px;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.usage-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 440px;
+}
+
+.usage-bar {
+  display: grid;
+  grid-template-columns: 50px 1fr 28px;
+  align-items: center;
+  gap: 10px;
+}
+
+.usage-bar__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--brass);
+  text-align: right;
+}
+
+.usage-bar__track {
+  background: var(--page);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.usage-bar__fill {
+  background: var(--accent);
+  height: 100%;
+}
+
+.usage-bar__count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
 /* ---------- Scientific calculator (round keypad) ---------- */
 
 .sci-calc {

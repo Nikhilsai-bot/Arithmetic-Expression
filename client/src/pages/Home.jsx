@@ -1,6 +1,5 @@
 import { StackView, TraceStep } from "../components/Trace";
 import { useCalculator } from "../context/CalculatorContext";
-import heroPattern from "../assets/hero-pattern.jpg";
 
 export default function Home() {
   const {
@@ -18,18 +17,25 @@ export default function Home() {
     clear,
     backspace,
     calculate,
+    analysis,
+    loadExpression,
+    suggestedNext,
   } = useCalculator();
 
+  // Combine frequent and recent expressions into one deduplicated quick-pick list.
+  const quickPicks = [];
+  if (analysis) {
+    const seen = new Set();
+    for (const { expression: e } of analysis.topExpressions) {
+      if (!seen.has(e)) { quickPicks.push(e); seen.add(e); }
+    }
+    for (const e of analysis.recentExpressions) {
+      if (!seen.has(e) && quickPicks.length < 6) { quickPicks.push(e); seen.add(e); }
+    }
+  }
+
   return (
-    <div
-      className="home-bg"
-      style={{
-        backgroundImage: `url(${heroPattern})`,
-        backgroundRepeat: "repeat",
-        backgroundSize: "700px auto",
-        backgroundPosition: "top center",
-      }}
-    >
+    <>
       <p className="page__lede">
         A full scientific calculator: trigonometric and logarithmic
         functions, constants, and factorial are all evaluated the same way
@@ -37,6 +43,19 @@ export default function Home() {
         Shunting-Yard, then run through a stack machine. Scroll down to see
         the trace for whatever you calculate.
       </p>
+
+      {quickPicks.length > 0 && (
+        <section className="section">
+          <h2 className="section__label">Suggestions — Based on Your History</h2>
+          <div className="chip-row">
+            {quickPicks.map((e) => (
+              <button key={e} className="chip" onClick={() => loadExpression(e)}>
+                {e}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="section">
         <h2 className="section__label">Figure 1 — Scientific Calculator</h2>
@@ -54,6 +73,17 @@ export default function Home() {
               )}
             </div>
           </div>
+
+          {suggestedNext.length > 0 && (
+            <div className="next-suggest">
+              <span className="next-suggest__label">next:</span>
+              {suggestedNext.map(({ token }) => (
+                <button key={token} className="next-suggest__chip" onClick={() => append(token)}>
+                  {token}
+                </button>
+              ))}
+            </div>
+          )}
 
           <div className="sci-keypad">
             <button className="rkey rkey--fn" onClick={() => pressFunction("sin")}>sin</button>
@@ -126,6 +156,34 @@ export default function Home() {
         </div>
       </section>
 
+      {analysis && analysis.totalCalculations > 0 && (
+        <section className="section">
+          <h2 className="section__label">Your Usage Analysis</h2>
+          <p className="insights__summary">
+            {analysis.totalCalculations} calculation{analysis.totalCalculations === 1 ? "" : "s"} recorded.
+            {analysis.functionUsage.length > 0 && (
+              <> Most used: <strong>{analysis.functionUsage[0].token}</strong> ({analysis.functionUsage[0].count}×).</>
+            )}
+          </p>
+          {analysis.functionUsage.length > 0 && (
+            <div className="usage-bars">
+              {analysis.functionUsage.map(({ token, count }) => (
+                <div key={token} className="usage-bar">
+                  <span className="usage-bar__label">{token}</span>
+                  <div className="usage-bar__track">
+                    <div
+                      className="usage-bar__fill"
+                      style={{ width: `${(count / analysis.functionUsage[0].count) * 100}%` }}
+                    />
+                  </div>
+                  <span className="usage-bar__count">{count}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
       <section className="section">
         <h2 className="section__label">Algorithm 1 — Execution Trace</h2>
         <div className="trace__tabs">
@@ -159,6 +217,6 @@ export default function Home() {
             )}
         </div>
       </section>
-    </div>
+    </>
   );
 }

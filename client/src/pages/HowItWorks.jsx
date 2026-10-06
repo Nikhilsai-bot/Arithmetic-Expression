@@ -108,6 +108,35 @@ export default function HowItWorks() {
           output are interpreted.
         </p>
       </section>
+      <section className="section">
+        <h2 className="section__label">7. History-Based Suggestions</h2>
+        <p>
+          The Calculator page also suggests expressions and next tokens
+          based on everything calculated so far. This isn't a trained model
+          — it's two plain frequency counts built with hash maps over the
+          stored history:
+        </p>
+        <ul className="rule-list">
+          <li>
+            <strong>Frequent &amp; recent expressions</strong> — counted by
+            grouping past calculations by their exact expression string, so
+            the most-repeated ones surface as one-click suggestions.
+          </li>
+          <li>
+            <strong>Next-token prediction</strong> — a bigram model: for
+            every consecutive pair of tokens seen across past expressions, a
+            hash map counts how often the second followed the first. Typing{" "}
+            <code>sin(</code> and seeing <code>30</code>, <code>45</code>,{" "}
+            <code>60</code> suggested is this map being looked up by the
+            current last token.
+          </li>
+        </ul>
+        <p className="note">
+          Both run in O(n) over the recent history on each request — simple
+          counting, not machine learning, but enough to make the suggestions
+          feel personalized.
+        </p>
+      </section>
     </>
   );
 }
