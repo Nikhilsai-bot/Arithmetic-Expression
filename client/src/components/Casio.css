@@ -1,0 +1,125 @@
+/* Casio fx-100MS-inspired equation calculator */
+.solver { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+.casio {
+  width: 100%;
+  max-width: 360px;
+  padding: 14px 16px 24px;
+  background: linear-gradient(180deg, #4a4c50 0%, #36383b 45%, #2c2d30 100%);
+  border-radius: 20px 20px 46px 46px / 16px 16px 60px 60px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -3px 6px rgba(0, 0, 0, 0.35);
+  color: #eceef0;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  user-select: none;
+}
+
+.casio__head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 6px;
+  padding: 0 4px 10px;
+}
+.casio__brand { font-weight: 800; letter-spacing: 0.14em; font-size: 15px; color: #f4f5f6; }
+.casio__center { font-size: 9px; letter-spacing: 0.28em; color: #b9bdc2; font-style: italic; }
+.casio__model { font-size: 12px; font-weight: 700; font-style: italic; color: #d7dade; }
+
+/* ----- LCD ----- */
+.lcd-frame {
+  background: #17181a; padding: 9px; border-radius: 8px; margin-bottom: 16px;
+  box-shadow: inset 0 2px 5px #000, 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.lcd {
+  background: linear-gradient(180deg, #c8d1be 0%, #d3dbc9 100%);
+  border-radius: 3px; padding: 4px 9px 8px; min-height: 96px;
+  color: #1b2118; font-family: "IBM Plex Mono", ui-monospace, monospace;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.28);
+}
+.lcd__flags { display: flex; gap: 8px; font-size: 8px; font-weight: 700; letter-spacing: 0.04em; height: 12px; align-items: center; }
+.lcd__flags span { opacity: 0.12; }
+.lcd__flags span.on { opacity: 0.85; }
+.lcd__flags-end { margin-left: auto; }
+.lcd__input {
+  display: block; width: 100%; background: transparent; border: none; outline: none;
+  font: 600 18px "IBM Plex Mono", ui-monospace, monospace; color: #1b2118;
+  padding: 4px 0; caret-color: #1b2118; letter-spacing: 0.02em;
+}
+.lcd__input::placeholder { color: rgba(27, 33, 24, 0.22); }
+.lcd__result {
+  min-height: 34px; display: flex; align-items: baseline; justify-content: flex-end; gap: 8px;
+  font-weight: 600; font-size: 24px; overflow-x: auto; white-space: nowrap;
+}
+.lcd__label { font-size: 15px; opacity: 0.8; margin-right: auto; }
+.lcd__exp small { font-size: 12px; }
+.lcd__exp sup { font-size: 13px; margin-left: 2px; }
+.lcd__error { font-size: 18px; }
+.lcd__busy { letter-spacing: 0.2em; }
+
+/* ----- keys ----- */
+.ckeys-top { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: auto auto; gap: 4px 8px; margin-bottom: 8px; }
+.ckeys-mid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px 8px; margin-bottom: 8px; }
+.ckeys-num { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px 9px; }
+
+.ckey-cell { display: flex; flex-direction: column; justify-content: flex-end; min-width: 0; }
+.ckey-legend { display: flex; justify-content: space-between; gap: 2px; min-height: 13px; padding: 0 2px; font-size: 8.5px; font-weight: 700; line-height: 13px; white-space: nowrap; }
+.ckey-legend__y { color: #f3c53a; }
+.ckey-legend__r { color: #ef5b4e; }
+.ckey-legend__w { color: #e8eaec; }
+
+.ckey {
+  height: 28px; width: 100%; padding: 0;
+  font: 700 11px "Helvetica Neue", Arial, sans-serif; color: #f4f5f6;
+  background: linear-gradient(180deg, #64666b 0%, #46484c 100%);
+  border: none; border-radius: 14px / 11px; cursor: pointer;
+  box-shadow: 0 2.5px 0 #141517, 0 3px 4px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.ckey:hover { filter: brightness(1.12); }
+.ckey:active { transform: translateY(2px); box-shadow: 0 0.5px 0 #141517, inset 0 1px 0 rgba(255, 255, 255, 0.15); }
+.ckey--dim { opacity: 0.55; }
+.ckey--round {
+  height: 28px; border-radius: 50%; width: 36px; margin: 0 auto;
+  background: radial-gradient(circle at 35% 30%, #e1e3e6, #a9adb3);
+}
+.ckey--lit-y { box-shadow: 0 0 0 3px #f3c53a, 0 2.5px 0 #141517; }
+.ckey--lit-r { box-shadow: 0 0 0 3px #ef5b4e, 0 2.5px 0 #141517; }
+
+.ckey-cell--num .ckey { height: 36px; font-size: 17px; border-radius: 9px; background: linear-gradient(180deg, #34363a 0%, #232427 100%); }
+.ckey-cell--num .ckey.ckey--del { background: linear-gradient(180deg, #e08a3c 0%, #bd6420 100%); color: #fff; font-size: 14px; }
+.ckey-cell--num .ckey.ckey--eq { background: linear-gradient(180deg, #4d5056 0%, #36383c 100%); }
+.ckey-cell--num .ckey-legend { min-height: 11px; }
+
+/* ----- direction pad ----- */
+.cpad { position: relative; display: flex; align-items: center; justify-content: center; padding-top: 6px; }
+.cpad__copy { position: absolute; top: -2px; left: 50%; transform: translateX(-50%); font-size: 8.5px; font-weight: 700; color: #e8eaec; letter-spacing: 0.06em; }
+.cpad__ring {
+  position: relative; width: 84px; height: 66px; margin-top: 10px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #eceef0, #a7abb1);
+  box-shadow: 0 3px 0 #141517, 0 4px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 #fff;
+}
+.cpad__core { position: absolute; inset: 22px 30px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #5b5d62, #2a2b2e); pointer-events: none; }
+.cpad__btn { position: absolute; border: none; background: transparent; color: #2a2b2e; font-size: 10px; cursor: pointer; padding: 0; width: 24px; height: 18px; line-height: 18px; }
+.cpad__btn:hover { color: #000; }
+.cpad__btn:active { transform: scale(0.9); }
+.cpad__up { top: 1px; left: 30px; }
+.cpad__down { bottom: 1px; left: 30px; }
+.cpad__left { left: 4px; top: 24px; }
+.cpad__right { right: 4px; top: 24px; }
+
+/* ----- panel under the calculator ----- */
+.solver__panel { width: 100%; max-width: 700px; display: flex; flex-direction: column; gap: 16px; }
+.solver__help { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.55; }
+.solver__help .y { color: #b8860b; }
+.solver__help .r { color: #c0392b; }
+.solver__help code, .solver__method code { font-family: var(--mono); font-size: 12px; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+.solver__label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.solver__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.solver__chips .chip { animation: none; font-size: 12px; }
+.solver__error { border: 1px solid var(--danger); background: #f9ecec; color: var(--danger); border-radius: 8px; padding: 10px 14px; font-size: 14px; }
+.solver__result { border: 1px solid var(--rule-strong); border-radius: 12px; background: var(--page); padding: 16px 18px; animation: fadeInUp 0.25s ease both; }
+.solver__method { font-weight: 600; margin-bottom: 12px; }
+.solver__table { border-collapse: collapse; font-family: var(--mono); font-size: 15px; margin-bottom: 8px; }
+.solver__table th, .solver__table td { padding: 6px 18px 6px 0; text-align: left; border-bottom: 1px solid var(--rule); }
+.solver__table th { font-size: 12px; color: var(--muted); font-weight: 600; }
+.solver__param { font-family: var(--mono); padding-left: 18px; margin: 0 0 8px; }
+.solver__verdict { font-family: var(--mono); font-size: 16px; font-weight: 600; margin: 0 0 8px; }
+.solver__note { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+.solver__steps { margin-top: 12px; }
+.solver__steps summary { cursor: pointer; font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.solver__steps pre { margin: 10px 0 0; padding: 12px; background: #fff; border: 1px solid var(--rule); border-radius: 8px; font-family: var(--mono); font-size: 12px; overflow-x: auto; white-space: pre-wrap; }

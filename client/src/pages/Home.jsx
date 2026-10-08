@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import ModeSwitch from "../components/ModeSwitch";
 import { StackView, TraceStep } from "../components/Trace";
 import { useCalculator } from "../context/CalculatorContext";
 
@@ -21,8 +23,6 @@ export default function Home() {
     analysis,
     loadExpression,
     suggestedNext,
-    ai,
-    askAi,
     resultKey,
     inputRef,
     handleInputChange,
@@ -30,6 +30,17 @@ export default function Home() {
     syncCursor,
     placeCaretAtEnd,
   } = useCalculator();
+
+  // Arriving from the search box on the calculator hub: prefill the expression.
+  const [params, setParams] = useSearchParams();
+  useEffect(() => {
+    const q = params.get("q");
+    if (q) {
+      loadExpression(q);
+      setParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // When returning to this page with an existing expression, start with the
   // caret at the end so keypad presses append sensibly.
@@ -52,6 +63,7 @@ export default function Home() {
 
   return (
     <>
+      <ModeSwitch current="arithmetic" />
       <p className="page__lede">
         A full scientific calculator: trigonometric and logarithmic
         functions, constants, and factorial are all evaluated the same way
@@ -193,52 +205,6 @@ export default function Home() {
         </div>
       </section>
 
-
-      <section className="section">
-        <h2 className="section__label">AI Suggestions — Powered by Google Gemini</h2>
-        <div className="ai-panel">
-          <div className="ai-panel__head">
-            <p className="ai-panel__hint">
-              Get follow-up ideas based on what you are calculating and your recent history.
-            </p>
-            <button className="ai-panel__btn" onClick={askAi} disabled={ai.status === "loading"}>
-              {ai.status === "loading" ? "Thinking…" : "✨ Suggest with AI"}
-            </button>
-          </div>
-
-          {ai.status === "error" && <div className="ai-panel__error">{ai.error}</div>}
-
-          {ai.status === "done" && ai.data && (
-            <>
-              {ai.data.tip && <p className="ai-panel__tip">{ai.data.tip}</p>}
-              {ai.data.suggestions.length > 0 ? (
-                <ul className="ai-list">
-                  {ai.data.suggestions.map((s) => (
-                    <li key={s.expression}>
-                      <button className="chip" onClick={() => loadExpression(s.expression)}>
-                        {s.expression}
-                      </button>
-                      {s.reason && <span className="ai-list__reason">{s.reason}</span>}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="ai-panel__hint">No valid suggestions came back. Try again.</p>
-              )}
-              {ai.data.sources?.length > 0 && (
-                <p className="ai-panel__sources">
-                  Sources (Google Search):{" "}
-                  {ai.data.sources.map((src) => (
-                    <a key={src.uri} href={src.uri} target="_blank" rel="noreferrer">
-                      {src.title}
-                    </a>
-                  ))}
-                </p>
-              )}
-            </>
-          )}
-        </div>
-      </section>
 
       {analysis && analysis.totalCalculations > 0 && (
         <section className="section">
