@@ -91,6 +91,8 @@
   margin: 0 0 22px;
   letter-spacing: -0.01em;
   color: var(--ink);
+  animation: fadeInUp 0.5s ease both;
+  animation-delay: 60ms;
 }
 
 .landing__sub {
@@ -99,6 +101,8 @@
   color: var(--muted);
   max-width: 48ch;
   margin: 0 0 34px;
+  animation: fadeInUp 0.5s ease both;
+  animation-delay: 140ms;
 }
 
 .landing__actions {
@@ -106,6 +110,8 @@
   align-items: center;
   gap: 14px;
   flex-wrap: wrap;
+  animation: fadeInUp 0.5s ease both;
+  animation-delay: 220ms;
 }
 
 .landing__cta {
@@ -117,10 +123,12 @@
   padding: 13px 24px;
   border-radius: 3px;
   text-decoration: none;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .landing__cta:hover {
   background: var(--accent);
+  transform: translateY(-1px);
 }
 
 .landing__cta-secondary {
@@ -132,15 +140,19 @@
   padding: 13px 24px;
   border-radius: 3px;
   text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.1s ease;
 }
 
 .landing__cta-secondary:hover {
   border-color: var(--ink);
+  transform: translateY(-1px);
 }
 
 .landing__art {
   display: flex;
   justify-content: center;
+  animation: fadeIn 0.6s ease both;
+  animation-delay: 180ms;
 }
 
 .landing__footer {

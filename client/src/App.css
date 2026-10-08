@@ -42,6 +42,7 @@
   padding: 10px 14px;
   border-radius: 4px;
   border-bottom: 2px solid transparent;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .site__navlink:hover {
@@ -68,6 +69,7 @@
   width: 100%;
   margin: 0 auto;
   padding: 36px 24px 64px;
+  animation: fadeInUp 0.35s ease both;
 }
 
 .page__lede {
@@ -171,12 +173,22 @@
   padding: 8px 14px;
   border-radius: 20px;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  animation: fadeInUp 0.3s ease both;
 }
+
+.chip:nth-child(1) { animation-delay: 0ms; }
+.chip:nth-child(2) { animation-delay: 40ms; }
+.chip:nth-child(3) { animation-delay: 80ms; }
+.chip:nth-child(4) { animation-delay: 120ms; }
+.chip:nth-child(5) { animation-delay: 160ms; }
+.chip:nth-child(6) { animation-delay: 200ms; }
 
 .chip:hover {
   border-color: var(--accent);
   background: var(--accent-soft);
   color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .next-suggest {
@@ -202,11 +214,14 @@
   padding: 4px 12px;
   border-radius: 14px;
   cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  animation: popIn 0.25s ease both;
 }
 
 .next-suggest__chip:hover {
   background: var(--brass);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .insights__summary {
@@ -227,6 +242,22 @@
   grid-template-columns: 50px 1fr 28px;
   align-items: center;
   gap: 10px;
+  animation: fadeInUp 0.3s ease both;
+}
+
+.usage-bar:nth-child(1) { animation-delay: 0ms; }
+.usage-bar:nth-child(2) { animation-delay: 40ms; }
+.usage-bar:nth-child(3) { animation-delay: 80ms; }
+.usage-bar:nth-child(4) { animation-delay: 120ms; }
+.usage-bar:nth-child(5) { animation-delay: 160ms; }
+.usage-bar:nth-child(6) { animation-delay: 200ms; }
+.usage-bar:nth-child(7) { animation-delay: 240ms; }
+.usage-bar:nth-child(8) { animation-delay: 280ms; }
+
+.usage-bar__fill {
+  background: var(--accent);
+  height: 100%;
+  transition: width 0.4s ease;
 }
 
 .usage-bar__label {
@@ -242,11 +273,6 @@
   border-radius: 4px;
   height: 10px;
   overflow: hidden;
-}
-
-.usage-bar__fill {
-  background: var(--accent);
-  height: 100%;
 }
 
 .usage-bar__count {
@@ -283,6 +309,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
 }
 
 .rkey:hover {
@@ -291,7 +318,7 @@
 }
 
 .rkey:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
 .rkey--fn {
@@ -368,6 +395,35 @@
   word-break: break-all;
 }
 
+/* The expression is an editable input: click to place the cursor, use the
+   arrow keys to move it, and fix a mistake anywhere in the expression. */
+.display__input {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  text-align: right;
+  caret-color: var(--accent);
+  cursor: text;
+}
+
+.display__input::placeholder {
+  color: var(--muted);
+}
+
+.display {
+  transition: border-color 0.15s ease;
+}
+
+.display:focus-within {
+  border-color: var(--accent);
+}
+
 .display__result {
   font-size: 30px;
   font-weight: 600;
@@ -376,10 +432,16 @@
   margin-top: 4px;
 }
 
+.display__result-value {
+  display: inline-block;
+  animation: popIn 0.3s ease both;
+}
+
 .display__error {
   color: var(--danger);
   font-size: 14px;
   font-family: var(--serif);
+  animation: fadeInUp 0.2s ease both;
 }
 
 .display__placeholder {
@@ -501,6 +563,7 @@
   border-radius: 4px;
   padding: 12px 14px;
   background: var(--page);
+  animation: fadeInUp 0.3s ease both;
 }
 
 .trace-step__head {
@@ -567,6 +630,7 @@
   border-radius: 3px;
   padding: 3px 8px;
   width: fit-content;
+  animation: tilePush 0.25s ease both;
 }
 
 .stack-tile--top {

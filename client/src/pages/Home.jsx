@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { StackView, TraceStep } from "../components/Trace";
 import { useCalculator } from "../context/CalculatorContext";
 
@@ -20,7 +21,20 @@ export default function Home() {
     analysis,
     loadExpression,
     suggestedNext,
+    resultKey,
+    inputRef,
+    handleInputChange,
+    handleInputKeyDown,
+    syncCursor,
+    placeCaretAtEnd,
   } = useCalculator();
+
+  // When returning to this page with an existing expression, start with the
+  // caret at the end so keypad presses append sensibly.
+  useEffect(() => {
+    placeCaretAtEnd();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Combine frequent and recent expressions into one deduplicated quick-pick list.
   const quickPicks = [];
@@ -48,8 +62,8 @@ export default function Home() {
         <section className="section">
           <h2 className="section__label">Suggestions — Based on Your History</h2>
           <div className="chip-row">
-            {quickPicks.map((e, i) => (
-              <button key={e} className="chip" style={{ "--i": i }} onClick={() => loadExpression(e)}>
+            {quickPicks.map((e) => (
+              <button key={e} className="chip" onClick={() => loadExpression(e)}>
                 {e}
               </button>
             ))}
@@ -60,14 +74,35 @@ export default function Home() {
       <section className="section">
         <h2 className="section__label">Figure 1 — Scientific Calculator</h2>
 
-        <div className="sci-calc">
+        <div
+          className="sci-calc"
+          onMouseDown={(e) => {
+            // Pressing a keypad button shouldn't pull focus (and the caret)
+            // out of the display input.
+            if (e.target.closest("button")) e.preventDefault();
+          }}
+        >
           <div className="display">
-            <div className="display__expression">{expression || "0"}</div>
+            <input
+              ref={inputRef}
+              className="display__expression display__input"
+              value={expression}
+              placeholder="0"
+              onChange={handleInputChange}
+              onKeyDown={handleInputKeyDown}
+              onSelect={syncCursor}
+              onKeyUp={syncCursor}
+              onClick={syncCursor}
+              inputMode="none"
+              spellCheck={false}
+              autoComplete="off"
+              aria-label="Expression — click to move the cursor and edit"
+            />
             <div className="display__result">
               {error ? (
-                <span key={error} className="display__error">{error}</span>
+                <span className="display__error">{error}</span>
               ) : outcome ? (
-                <span key={String(outcome.result) + outcome.postfix.join(" ")} className="display__value">{outcome.result}</span>
+                <span key={resultKey} className="display__result-value">{outcome.result}</span>
               ) : (
                 <span className="display__placeholder">&nbsp;</span>
               )}
@@ -77,8 +112,8 @@ export default function Home() {
           {suggestedNext.length > 0 && (
             <div className="next-suggest">
               <span className="next-suggest__label">next:</span>
-              {suggestedNext.map(({ token }, i) => (
-                <button key={token} className="next-suggest__chip" style={{ "--i": i }} onClick={() => append(token)}>
+              {suggestedNext.map(({ token }) => (
+                <button key={token} className="next-suggest__chip" onClick={() => append(token)}>
                   {token}
                 </button>
               ))}
@@ -145,7 +180,7 @@ export default function Home() {
           </div>
 
           {outcome && (
-            <div className="postfix-line" key={outcome.postfix.join(" ")}>
+            <div className="postfix-line">
               <span className="postfix-line__label">postfix form</span>
               <span className="postfix-line__value">{outcome.postfix.join(" ")}</span>
               <span className="postfix-line__label" style={{ marginLeft: "auto" }}>
@@ -167,8 +202,8 @@ export default function Home() {
           </p>
           {analysis.functionUsage.length > 0 && (
             <div className="usage-bars">
-              {analysis.functionUsage.map(({ token, count }, i) => (
-                <div key={token} className="usage-bar" style={{ "--i": i }}>
+              {analysis.functionUsage.map(({ token, count }) => (
+                <div key={token} className="usage-bar">
                   <span className="usage-bar__label">{token}</span>
                   <div className="usage-bar__track">
                     <div
@@ -203,7 +238,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="trace__body" key={tab}>
+        <div className="trace__body">
           {!outcome && (
             <div className="empty-note">
               Enter an expression above and press = to see the algorithm run
@@ -213,7 +248,7 @@ export default function Home() {
           )}
           {outcome &&
             (tab === "postfix" ? outcome.trace.infixToPostfix : outcome.trace.evaluation).map(
-              (step, i) => <TraceStep key={tab + i} step={step} phase={tab} index={i + 1} />
+              (step, i) => <TraceStep key={i} step={step} phase={tab} index={i + 1} />
             )}
         </div>
       </section>
