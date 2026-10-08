@@ -718,3 +718,37 @@
     gap: 10px;
   }
 }
+
+/* ---------- AI suggestions panel ---------- */
+.ai-panel {
+  border: 1px solid var(--brass);
+  background: var(--brass-soft);
+  border-radius: 10px;
+  padding: 16px;
+}
+.ai-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ai-panel__hint { margin: 0; font-size: 14px; color: var(--muted); }
+.ai-panel__btn {
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--brass);
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ai-panel__btn:disabled { opacity: 0.6; cursor: wait; }
+.ai-panel__tip { margin: 14px 0 8px; font-size: 14px; color: var(--ink); }
+.ai-panel__error { margin-top: 12px; font-size: 13px; color: #b3261e; }
+.ai-panel__sources { margin: 12px 0 0; font-size: 12px; color: var(--muted); }
+.ai-panel__sources a { margin-right: 10px; color: var(--brass); }
+.ai-list { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-direction: column; gap: 8px; }
+.ai-list li { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.ai-list__reason { font-size: 13px; color: var(--muted); }

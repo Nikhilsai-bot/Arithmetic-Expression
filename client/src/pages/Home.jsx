@@ -21,6 +21,8 @@ export default function Home() {
     analysis,
     loadExpression,
     suggestedNext,
+    ai,
+    askAi,
     resultKey,
     inputRef,
     handleInputChange,
@@ -187,6 +189,53 @@ export default function Home() {
                 angle mode: {outcome.angleMode}
               </span>
             </div>
+          )}
+        </div>
+      </section>
+
+
+      <section className="section">
+        <h2 className="section__label">AI Suggestions — Powered by Google Gemini</h2>
+        <div className="ai-panel">
+          <div className="ai-panel__head">
+            <p className="ai-panel__hint">
+              Get follow-up ideas based on what you are calculating and your recent history.
+            </p>
+            <button className="ai-panel__btn" onClick={askAi} disabled={ai.status === "loading"}>
+              {ai.status === "loading" ? "Thinking…" : "✨ Suggest with AI"}
+            </button>
+          </div>
+
+          {ai.status === "error" && <div className="ai-panel__error">{ai.error}</div>}
+
+          {ai.status === "done" && ai.data && (
+            <>
+              {ai.data.tip && <p className="ai-panel__tip">{ai.data.tip}</p>}
+              {ai.data.suggestions.length > 0 ? (
+                <ul className="ai-list">
+                  {ai.data.suggestions.map((s) => (
+                    <li key={s.expression}>
+                      <button className="chip" onClick={() => loadExpression(s.expression)}>
+                        {s.expression}
+                      </button>
+                      {s.reason && <span className="ai-list__reason">{s.reason}</span>}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="ai-panel__hint">No valid suggestions came back. Try again.</p>
+              )}
+              {ai.data.sources?.length > 0 && (
+                <p className="ai-panel__sources">
+                  Sources (Google Search):{" "}
+                  {ai.data.sources.map((src) => (
+                    <a key={src.uri} href={src.uri} target="_blank" rel="noreferrer">
+                      {src.title}
+                    </a>
+                  ))}
+                </p>
+              )}
+            </>
           )}
         </div>
       </section>

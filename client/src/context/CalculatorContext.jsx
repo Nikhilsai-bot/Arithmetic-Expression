@@ -23,6 +23,7 @@ export function CalculatorProvider({ children }) {
   const [angleMode, setAngleMode] = useState("rad"); // rad | deg
   const [inv, setInv] = useState(false);
   const [analysis, setAnalysis] = useState(null);
+  const [ai, setAi] = useState({ status: "idle", data: null, error: "" }); // idle | loading | done | error
   const [resultKey, setResultKey] = useState(0); // bumped on each successful calc, to replay the result animation
 
   // The editable display input, and where the caret should land after the
@@ -161,6 +162,31 @@ export function CalculatorProvider({ children }) {
     }
   };
 
+  // Ask the backend (which calls Google's Gemini API) for suggestions based on
+  // the current expression, its result, and recent history.
+  const askAi = async () => {
+    setAi({ status: "loading", data: null, error: "" });
+    try {
+      const res = await fetch(`${API}/ai-suggest`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          expression,
+          result: outcome?.expression === expression ? outcome.result : undefined,
+          angleMode,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setAi({ status: "error", data: null, error: data.error || "AI request failed." });
+        return;
+      }
+      setAi({ status: "done", data, error: "" });
+    } catch (e) {
+      setAi({ status: "error", data: null, error: "Could not reach the server." });
+    }
+  };
+
   // Enter on a physical keyboard calculates.
   const handleInputKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -196,6 +222,8 @@ export function CalculatorProvider({ children }) {
         analysis,
         loadExpression,
         suggestedNext,
+        ai,
+        askAi,
         resultKey,
         inputRef,
         handleInputChange,
