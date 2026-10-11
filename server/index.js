@@ -5,13 +5,14 @@ const { calculate } = require("./calculator");
 const { initDb, insertHistory, getHistory, clearHistory, backend } = require("./db");
 const { computeAnalysis } = require("./analysis");
 const { getAiSuggestions, aiEnabled } = require("./ai");
+const { solveEquations, SolveError } = require("./equations");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", database: backend, ai: aiEnabled() ? "enabled" : "disabled" });
+  res.json({ status: "ok", database: backend, ai: aiEnabled() ? "enabled" : "disabled", solver: "available" });
 });
 
 app.post("/api/calculate", async (req, res) => {
@@ -83,6 +84,21 @@ app.post("/api/ai-suggest", aiRateLimit, async (req, res) => {
     res.json(out);
   } catch (err) {
     res.status(502).json({ error: err.message });
+  }
+});
+
+// --- Equation solver ---------------------------------------------------
+app.post("/api/solve", (req, res) => {
+  const { equations, angleMode } = req.body || {};
+  if (typeof equations !== "string" || !equations.trim()) {
+    return res.status(400).json({ error: "Write an equation first, for example x^2 - 5x + 6 = 0" });
+  }
+  try {
+    res.json(solveEquations(equations.slice(0, 500), angleMode === "deg" ? "deg" : "rad"));
+  } catch (err) {
+    if (err instanceof SolveError) return res.status(400).json({ error: err.message });
+    console.error("Solver crashed:", err);
+    res.status(500).json({ error: "The solver hit an unexpected problem." });
   }
 });
 

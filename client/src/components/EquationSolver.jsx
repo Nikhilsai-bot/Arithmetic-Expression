@@ -168,26 +168,78 @@ export default function EquationSolver({ initial = "" }) {
     setIdx(0);
   };
 
+  // Free hosts such as Render go to sleep when idle. While one wakes up it can
+  // drop the request or answer 502/503/504, so try a few times before failing.
+  const postSolve = async (text) => {
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+    let lastError;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        const res = await fetch(`${API}/solve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ equations: text, angleMode: angle }),
+        });
+        if ([502, 503, 504].includes(res.status) && attempt < 2) {
+          await sleep(3000);
+          continue;
+        }
+        return res;
+      } catch (e) {
+        lastError = e;
+        if (attempt < 2) await sleep(3000);
+      }
+    }
+    throw lastError;
+  };
+
   const solve = async (text = expr) => {
     if (!text.trim()) return;
     setState({ status: "loading", data: null, error: "" });
     setIdx(0);
     try {
-      const res = await fetch(`${API}/solve`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ equations: text, angleMode: angle }),
-      });
-      const data = await res.json();
+      const res = await postSolve(text);
+
+      let data = null;
+      try {
+        data = await res.json();
+      } catch {
+        // The reply wasn't JSON, so it isn't coming from the solver route.
+      }
+
+      if (!data) {
+        let why;
+        if (res.ok) {
+          why =
+            `Got a web page instead of JSON from ${API}/solve. The request went to the website itself, ` +
+            `not the backend. Set VITE_API_URL to your backend address (ending in /api) and redeploy.`;
+        } else if (res.status === 404) {
+          why =
+            `The backend answered 404: it has no POST ${API}/solve route. ` +
+            `Push the latest server code and check that the backend redeployed successfully.`;
+        } else {
+          why = `The backend answered HTTP ${res.status} without a JSON reply. Check the backend logs.`;
+        }
+        setState({ status: "error", data: null, error: why, network: true });
+        return;
+      }
+
       if (!res.ok) {
-        setState({ status: "error", data: null, error: data.error || "Something went wrong" });
+        setState({ status: "error", data: null, error: data.error || `Server error (HTTP ${res.status})` });
         return;
       }
       setState({ status: "ok", data, error: "" });
       const first = buildItems(data)[0];
       if (first && first.re != null) setLastAns(first.re);
     } catch {
-      setState({ status: "error", data: null, error: "Could not reach the server. Is the backend running?" });
+      setState({
+        status: "error",
+        data: null,
+        network: true,
+        error:
+          `Could not reach the backend at ${API}. It may be asleep, not running, or blocked by CORS. ` +
+          `Open ${API}/health in a browser tab to check.`,
+      });
     }
   };
 
@@ -259,7 +311,7 @@ export default function EquationSolver({ initial = "" }) {
   // ----- LCD content -----
   let bottom;
   if (state.status === "loading") bottom = <span className="lcd__busy">…</span>;
-  else if (state.status === "error") bottom = <span className="lcd__error">{errorLabel(state.error)}</span>;
+  else if (state.status === "error") bottom = <span className="lcd__error">{state.network ? "Network ERROR" : errorLabel(state.error)}</span>;
   else if (current) {
     let value = current.text;
     let exp = null;
