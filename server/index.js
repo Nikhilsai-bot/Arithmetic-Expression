@@ -4,15 +4,34 @@ const cors = require("cors");
 const { calculate } = require("./calculator");
 const { initDb, insertHistory, getHistory, clearHistory, backend } = require("./db");
 const { computeAnalysis } = require("./analysis");
-const { getAiSuggestions, aiEnabled } = require("./ai");
-const { solveEquations, SolveError } = require("./equations");
+
+// Optional modules: if one of these files is missing or fails to load, the rest
+// of the API (calculator, history, analysis) must still start. Without this, a
+// file that was not pushed to GitHub would crash the whole server on Render.
+let getAiSuggestions = async () => {
+  throw new Error("AI suggestions are not available on this server.");
+};
+let aiEnabled = () => false;
+try {
+  ({ getAiSuggestions, aiEnabled } = require("./ai"));
+} catch (err) {
+  console.warn("AI suggestions are disabled:", err.message);
+}
+
+let solveEquations = null;
+let SolveError = class extends Error {};
+try {
+  ({ solveEquations, SolveError } = require("./equations"));
+} catch (err) {
+  console.warn("Equation solver is disabled:", err.message);
+}
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", database: backend, ai: aiEnabled() ? "enabled" : "disabled", solver: "available" });
+  res.json({ status: "ok", database: backend, ai: aiEnabled() ? "enabled" : "disabled", solver: solveEquations ? "available" : "missing" });
 });
 
 app.post("/api/calculate", async (req, res) => {
@@ -89,6 +108,11 @@ app.post("/api/ai-suggest", aiRateLimit, async (req, res) => {
 
 // --- Equation solver ---------------------------------------------------
 app.post("/api/solve", (req, res) => {
+  if (!solveEquations) {
+    return res.status(503).json({
+      error: "The equation solver is not installed on this server (server/equations.js is missing or failed to load).",
+    });
+  }
   const { equations, angleMode } = req.body || {};
   if (typeof equations !== "string" || !equations.trim()) {
     return res.status(400).json({ error: "Write an equation first, for example x^2 - 5x + 6 = 0" });
